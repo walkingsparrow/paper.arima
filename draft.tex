@@ -21,29 +21,27 @@
 
 \maketitle
 
-\begin{abstract}
-  MADlib is an open-source library for scalable in-database
-  analytics. It provides data-parallel implementations of
-  mathematical, statistical and machine-learning methods for
-  structured and unstructured data. We impemented ARIMA in MADlib's
-  framework. The algorithms for fitting ARIMA model to time series are
-  intrinsically sequential, because any calculation for a specific
-  time $t$ depends on the
-  result from the calculation for $t-1$. This makes it difficult to
-  parallelize the ARIMA model fitting. Our solution parallelizes the
-  computation by splitting the data into $n$ chunks. Since the model
-  fitting involves multiple iterations of computations. We use the
-  results from previous iteration as the initial values for each
-  chunk. Thus the computation for each chunk of data does not need to
-  wait for the results from previous chunk. Another technique is used
-  to improve the performance of the implementation, which
-  redistributes the original data so that each chunk can be completely
-  loaded into memory.
-\end{abstract}
+\begin{abstract} MADlib is an open-source library for scalable in-database
+  analytics. We impemented ARIMA in MADlib's framework. The algorithms for
+  fitting ARIMA model to time series are intrinsically sequential, because any
+  calculation for a specific time $t$ depends on the result from the
+  calculation for $t-1$.  This makes it difficult to parallelize the ARIMA
+  model fitting. Our solution parallelizes the computation by splitting the
+  data into $n$ chunks. Since the model fitting involves multiple iterations of
+  computations. We use the results from previous iteration as the initial
+  values for each chunk. Thus the computation for each chunk of data does not
+  need to wait for the results from previous chunk. Another technique is used
+  to improve the performance of the implementation, which redistributes the
+  original data so that each chunk can be completely loaded into memory.
+  \end{abstract}
 
 \section{Introduction}
 
 % Introduce to MADlib, and implement ARIMA in MADLib
+MADlib is an open source library for scalable in-database analytics. It is
+created by the Predictive Analytics Team at Pivotal Inc. MADlib provides
+data-parallel implementations of mathematical, statistical and machine-learning
+methods for structured and unstructured data. 
 
 \section{MADlib}
 

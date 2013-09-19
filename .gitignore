@@ -1,2 +1,9 @@
 auto/
 *.project.vim
+*.swp
+*._aux
+*._log
+*.aux
+*.log
+*.pdf
+*.synctex.gz
