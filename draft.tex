@@ -281,6 +281,42 @@ A proposed implementation is as follows:
 Suggested values for the tuning parameters are $\epsilon_1 = \epsilon_2 =
 \epsilon_3 = 10^{-15}, \tau = 10^{-3}$ and $k_{max} = 100$.
 
+The Jacobian matrix $J = (J_{1}, J_{2}, \dots, J_N)^T$ requires the partial derivatives, which are
+\begin{align}
+J_t = (J_{t, \phi_1}, \dots, J_{t,\phi_p}, J_{t,\theta_1}, \dots,
+J_{t,\theta_q}, J_{t,\mu})^T\ .
+\end{align}
+Here the last term is present only when \texttt{include\_mean} is
+\texttt{True}.
+The iteration relations for $J$ are
+\begin{align}
+J_{t, \phi_i} &= \frac{\partial F_t(\phi,\theta)}{\partial \phi_i} =
+-\frac{\partial Z_t}{\partial \phi_i} = X_{t-i}-\mu + \sum_{j=1}^q
+\theta_j \frac{\partial Z_{t - j}}{\partial \phi_i} = X_{t-i}-\mu - \sum_{j=1}^q
+\theta_j J_{t-j,\phi_i}, \\
+J_{t, \theta_i}&=\frac{\partial F_t(\phi,\theta)}{\partial \theta_i} =
+-\frac{\partial Z_t}{\partial \theta_i} = Z_{t-i} + \sum_{j =1}^q
+\theta_j \frac{\partial Z_{t - j}}{\partial \theta_i} = Z_{t-i} -
+\sum_{j=1}^q \theta_j J_{t-j,\theta_i}, \\
+J_{t, \mu} &=\frac{\partial F_t(\phi,\theta)}{\partial \mu} =
+-\frac{\partial Z_t}{\partial \mu} = 1 -
+\sum_{j=1}^p \phi_j - \sum_{j=1}^q \theta_j \frac{\partial
+  Z_{t-j}}{\partial \mu} = 1 - \sum_{j=1}^p \phi_j - \sum_{j=1}^q
+\theta_j J_{t-j,\mu}.
+\end{align}
+Note that the mean value $\mu$ is considered separately in the above
+formulations. When \texttt{include\_mean} is set to \texttt{False}, $\mu$ will be simply
+set to 0. Otherwise, $\mu$ will also be estimated together with
+$\vec{\phi}$ and $\vec{\theta}$. The initial conditions for the above
+equations are
+\begin{equation}
+J_{t,\phi_i} = J_{t,\theta_j} = J_{t,\mu} = 0 \quad \mbox{for }
+t \leq p, \mbox{ and } i=1,\dots,p; j = 1, \dots, q\ ,
+\end{equation}
+because we have fixed $Z_t$ for $t\leq p$ to be a constant $0$ in the initial
+condition. Note that $J$ is zero not only for $t\leq
+0$ but also for $t\leq p$.
+
 \subsection{The Problems in Parallelization}
 
 % What are the difficulties that we are facing
