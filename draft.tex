@@ -178,7 +178,6 @@ nonlinear, over a space of parameters of the function. These
 minimization problems arise especially in least squares curve fitting
 and nonlinear programming.
 
-%Author's (Mark W) Note: This is taken from http://people.duke.edu/~hpgavin/ce281/lm.pdf
 To understand the Levenberg-Marquardt algorithm, it helps to know the
 gradient descent method and the Gauss-Newton method.  On many
 ``reasonable'' functions, the gradient descent method takes large
@@ -192,7 +191,6 @@ weighted average.  For iterates far from the true solution, the step
 favors the gradient descent step, but as the iterate approaches the
 true solution, the Gauss-Newton step dominates.
 
-%Author's (Mark W) Note: Sudo code taken from http://users.ics.forth.gr/~lourakis/levmar/levmar.pdf
 Like other numeric minimization algorithms, LMA is an iterative
 procedure.  To start a minimization, the user has to provide an
 initial guess for the parameter vector, $p$, as well as some tuning
