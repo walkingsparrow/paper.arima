@@ -1,46 +1,16 @@
 \documentclass[english,12pt]{article}
+\usepackage{babel}
+\usepackage[latin1]{inputenc}
 \usepackage[T1]{fontenc}
-\usepackage[latin9]{inputenc}
-\usepackage{float} \usepackage{graphicx}
-\usepackage{esint} \usepackage{natbib} \usepackage{times,bm} \usepackage{babel}
 \usepackage{amsmath}
-%\usepackage{algorithm2e}
-\usepackage[noend]{algpseudocode}
-\usepackage{xspace}
+\usepackage{amssymb}
 
-\makeatletter
+\usepackage{algorithm2e}
+
+%\makeatletter
 \linespread{1.25}
 
-	% BEGIN Algorithms
-	\theoremstyle{algorithm}
-	\theorembodyfont{\upshape}
-	\newtheorem{algorithm}{Algorithm}[section]
-
-	\newlength{\alglabelwidth}
-	\newcommand{\alginput}[1]{%
-		\par\noindent%
-		\settowidth{\alglabelwidth}{\emph{Output:}}%
-		\makebox[\alglabelwidth][l]{\emph{Input:}} \begin{tabular}[t]{l} #1 \end{tabular}}
-	\newcommand{\algoutput}[1]{%
-		\par\noindent%
-		\settowidth{\alglabelwidth}{\emph{Output:}}%
-		\makebox[\alglabelwidth][l]{\emph{Output:}} \begin{tabular}[t]{l} #1 \end{tabular}}
-	\newcommand{\algprecond}[1]{%
-		\par\noindent\textit{Initialization/Precondition: #1}}
-
-	\newcommand{\set}{\leftarrow}
-	\DeclareMathOperator{\random}{random}
-	\newcommand{\dist}{\ensuremath{\mathit{dist}}}
-	\newcommand{\List}{\mathrm{List}}
-	\newcommand{\Sample}{\mathit{Sample}}
-	\algblockdefx[With]{With}{EndWith}%
-		[1]{\textbf{with} #1 \textbf{do}}%
-		[0]{End}
-	\algnotext[With]{EndWith}
-	% END Algorithms
-
-
-\pagestyle{headings}
+% \pagestyle{headings}
 
 \begin{document}
 
@@ -66,10 +36,12 @@
     original data so that each chunk can be completely loaded into memory.
 \end{abstract}
 
+%\maketitle
+
 \section{Introduction}
 
 % Introduce to MADlib, and implement ARIMA in MADLib
-MADlib \cite{madlib} is an open source library for scalable in-database
+MADlib~\cite{madlib} is an open source library for scalable in-database
 analytics.  It is created by the Predictive Analytics Team at Pivotal Inc.
 MADlib provides data-parallel implementations of mathematical, statistical and
 machine-learning methods for structured and unstructured data.
@@ -82,14 +54,14 @@ MADlib is created by the Predictive Analytics Team at Pivotal Inc. (previously
 Greenplum). It is an add-on package for Greenplum database or PostgreSQL
 database. The package itself is open sourced.
 
-Cohen et al. \cite{mad-skills} explained that "MAD" stands for "magnetic",
-"agile", "deep", and "lib" stands for advanced (mathematical, statistical,
+Cohen et al.~\cite{mad-skills} explained that ``MAD'' stands for ``magnetic'',
+``agile'', ``deep'', and ``lib'' stands for advanced (mathematical, statistical,
 machine learning), parallel and scalable in-database functions.
 
 The MADlib project was initiated in late 2010. Currently MADlib's latest
 version is 1.2. By itself MADlib provides a pure SQL interface. An R front-end
-named PivotalR \cite{pivotalr} is also created by the Predictive Analytics Team
-at Pivotal Inc. A Python wrapper \cite{python-madlib} for MADlib is also
+named PivotalR~\cite{pivotalr} is also created by the Predictive Analytics Team
+at Pivotal Inc. A Python wrapper~\cite{python-madlib} for MADlib is also
 available.
 
 MADlib can be installed and run on both Grenplum database and PostgreSQL\@. On
@@ -133,7 +105,7 @@ where $B$ is the backshift operator. The time $t$ is from $1$ to $N$.
 
 ARIMA models involve the following variables:
 \begin{enumerate}
-   \item The lag difference $Y_{t}$, where  $Y_{t} = (1-B)^{d}(X_{t} - \mu)$.
+   \item The lag difference $Y_{t}$, where  $Y_{t} = {(1-B)}^{d}(X_{t} - \mu)$.
     \item The values of the time series $X_t$.
     \item $p$, $q$, and $d$ are the parameters of the ARIMA model.
       $d$ is the differencing order, $p$ is the order of the AR
@@ -148,23 +120,23 @@ ARIMA models involve the following variables:
 The  auto regression operator models the prediction for the next
 observation  as some linear combination of the previous observations.
 More formally, an AR operator of order $p$ is defined as
-\begin{align}
-\phi(B) Y_t= \phi_1 Y_{t-1}   + \dots +  \phi_{p} Y_{t-p}
-\end{align}
+\begin{equation}
+\phi(B) Y_t= \phi_1 Y_{t-1}   + \cdots +  \phi_{p} Y_{t-p}
+\end{equation}
 
 The moving average operator is similar, and it models the prediction
 for the next observation as a linear combination of the errors in the
 previous prediction errors.  More formally, the MA operator of order
 $q$ is defined as
-\begin{align}
-\theta(B) Z_t =   \theta_{1} Z_{t-1} + \dots + \theta_{q} Z_{t-q}.
-\end{align}
+\begin{equation}
+\theta(B) Z_t =   \theta_{1} Z_{t-1} + \cdots + \theta_{q} Z_{t-q}.
+\end{equation}
 
 We assume that
 \begin{equation}
 \Pr(Z_t) = \frac{1}{\sqrt{2 \pi \sigma^2}} e^{-Z^2_t/2 \sigma^2}, \quad t > 0
 \end{equation}
-and that  $Z_{-q+1} = Z_{-q+2} = \dots = Z_0 = Z_1 = \dots = Z_p =
+and that  $Z_{-q+1} = Z_{-q+2} = \cdots = Z_0 = Z_1 = \cdots = Z_p =
 0$. The initial values of $Y_t=X_t-\mu$ for $t=-p+1, -p+2, \dots,
 0$ can be solved from the following linear equations
 \begin{eqnarray}
@@ -181,27 +153,30 @@ The likelihood function $L$ for $N$ values of $Z_t$  is then
 L(\phi, \theta) = \prod_{t = 1}^N  \frac{1}{\sqrt{2 \pi \sigma^2}} e^{-Z^2_t/2 \sigma^2}
 \end{equation}
 so the log likelihood function $l$ is
-\begin{align}
-l(\phi, \theta) &= \sum_{t = 1}^N \ln \left(\frac{1}{\sqrt{2 \pi \sigma^2}} e^{-Z^2_t/2 \sigma^2}
+\begin{eqnarray}
+l(\phi, \theta) &=& \sum_{t = 1}^N \ln \left(\frac{1}{\sqrt{2 \pi \sigma^2}}
+ e^{-Z^2_t/2 \sigma^2}
  \right) \nonumber\\
- &=  \sum_{t = 1}^N  - \ln \left( \sqrt{2 \pi \sigma^2}\right)  -\frac{Z^2_t}{2 \sigma^2}\nonumber\\
-&=  -\frac{N}{2} \ln \left( 2 \pi \sigma^2\right)  - \frac{1}{2
-  \sigma^2} \sum_{t = 1}^N   Z^2_t\ \. \label{eq:loglikelihood}
-\end{align}
+ &=&  \sum_{t = 1}^N  - \ln \left( \sqrt{2 \pi \sigma^2}\right)
+-\frac{Z^2_t}{2 \sigma^2}\nonumber\\
+&=&  -\frac{N}{2} \ln \left( 2 \pi \sigma^2\right)  - \frac{1}{2
+  \sigma^2} \sum_{t = 1}^N   Z^2_t\ . \label{eq:loglikelihood}
+\end{eqnarray}
 Thus, finding the maximum likelihood is equivalent to solving the
 optimization problem (known as the conditional least squares
 formation)
-\begin{align}
+\begin{equation}
 \min_{\theta, \phi} \sum_{t = 1}^N  Z^2_t.
-\end{align}
+\end{equation}
 The error term $Z_t$ can be computed iteratively as follows:
 \begin{equation}
     Z_t = X_t - F_t(\phi, \theta, \mu) \label{eq:error-terms}
 \end{equation}
 where
-\begin{align}
-F_t(\phi, \theta, \mu) = \mu + \sum_{i=1}^p \phi_i (X_{t-i}-\mu) + \sum_{i=1}^q \theta_i Z_{t-i}
-\end{align}
+\begin{equation}
+F_t(\phi, \theta, \mu) = \mu + \sum_{i=1}^p \phi_i (X_{t-i}-\mu) + \sum_{i=1}^q
+\theta_i Z_{t-i}
+\end{equation}
 
 In mathematics and computing, the Levenberg-Marquardt algorithm (LMA),
 also known as the damped least-squares (DLS) method, provides a
@@ -226,84 +201,101 @@ true solution, the Gauss-Newton step dominates.
 Like other numeric minimization algorithms, LMA is an iterative
 procedure.  To start a minimization, the user has to provide an
 initial guess for the parameter vector, $p$, as well as some tuning
-parameters $\tau, \epsilon_1, \epsilon_2, \epsilon_3,$ and $k_{max}$.
+parameters $\tau$, $\epsilon_1$, $\epsilon_2$, $\epsilon_3$, and $k_{\max}$.
 Let $Z(p)$ be the vector of calculated errors ($Z_t$'s) for the
-parameter vector $p$, and let $J = (J_{1}, J_{2}, \dots, J_N)^T$
+parameter vector $p$, and let $J = {(J_{1}, J_{2}, \ldots, J_N)}^T$
 be a Jacobian matrix.
 
 A proposed implementation is as follows:
 
-\begin{algorithm}
-\alginput{An initial guess for parameters $\vec{\phi}_0, \vec{\theta}_0, \mu_0$}
-\algoutput{The parameters that maximize the likelihood $\vec{\phi}^*,
+\begin{algorithm}[ht]
+\KwIn{An initial guess for parameters $\vec{\phi}_0, \vec{\theta}_0, \mu_0$}
+\KwOut{The parameters that maximize the likelihood $\vec{\phi}^*,
   \vec{\theta}^*, \mu^*$}
-\begin{algorithmic}[1]
-	\State $k \leftarrow 0$  \Comment{Iteration counter}
-	\State $v \leftarrow 2$ \Comment{The change in the weighting factor.}
-	\State $(\vec{\phi},\vec{\theta},\mu) \leftarrow (\vec{\phi}_0,\vec{\theta}_0,\mu_0)$ \Comment{Initialize parameter vector}
-    \State Calculate $Z(\vec{\phi},\vec{\theta},\mu)$ with
-    equation~\ref{eq:error-terms}.  \Comment{Vector of errors}
-	\State $A \leftarrow J^T J$   \Comment{The  Gauss-Newton Hessian approximation}
-	\State $u \leftarrow \tau * \max_i(A_{ii})$ \Comment{Weight of the gradient-descent step}
-	\State $g \leftarrow J^T Z(\vec{\phi},\vec{\theta},\mu)$ \Comment{The gradient descent step.}
-	\State $ \text{stop} \leftarrow (\|g\|_{\infty} \le \epsilon_1)$ \Comment{Termination Variable}
-	\While{(not stop) and ($k < k_{max}$)}
-		\State $k \leftarrow k + 1$
-		\Repeat
-			\State $\delta \leftarrow (A + u \times \text{diag}(A))^{-1} g$ \Comment{Calculate step direction}
-			\If{$\| \delta \| \le \epsilon_2 \|
-              (\vec{\phi},\vec{\theta},\mu) \|$} \Comment{Change in the parameters is too small to continue.}
-				\State  $\text{stop} \leftarrow \text{true}$
-			\Else
-				\State $(\vec{\phi}_{new},\vec{\theta}_{new},\mu_{new}) \leftarrow (\vec{\phi},\vec{\theta},\mu) + \delta$ \Comment{Take a trial step in the new direction}
-				\State $\rho \leftarrow (\| Z(\vec{\phi},\vec{\theta},\mu)\|^2 - \| Z(\vec{\phi}_{new},\vec{\theta}_{new},\mu_{new})\|^2 )/(\delta^T(u \delta + g))$ \Comment{Calculate improvement of trial step}
-				\If{$\rho > 0$} \Comment{Trial step was good, proceed to next iteration}
-					\State $(\vec{\phi},\vec{\theta},\mu) \leftarrow (\vec{\phi}_{new},\vec{\theta}_{new},\mu_{new})$ \Comment{Update variables}
-                    \State Calculate $Z(\vec{\phi},\vec{\theta},\mu)$ with
-                    equation~\ref{eq:error-terms}.
-					\State $A \leftarrow J^T J$
-					\State $g \leftarrow J^T Z(\vec{\phi},\vec{\theta},\mu)$
-					\State $ \text{stop} \leftarrow (\|g\|_{\infty} \le \epsilon_1)$ or $(\| Z(\vec{\phi},\vec{\theta},\mu)^2 \| \le \epsilon_3)$  \Comment{Terminate if we are close to the solution.}
-					\State $v \leftarrow 2$
-					\State $u \rightarrow u * \max(1/3, 1 - (2\rho - 1)^3 )$
-				\Else  \Comment{Trial step was bad, change weighting on the gradient decent step}
-					\State $v \leftarrow 2 v$
-					\State $u \leftarrow u v$
-				\EndIf
-			\EndIf
-		\Until{(stop) or ($\rho > 0$) }
-	\EndWhile
-	\State $(\vec{\phi}^*,\vec{\theta}^*,\mu^*) \leftarrow (\vec{\phi},\vec{\theta},\mu)$
-\end{algorithmic}
+    $k \leftarrow 0$; $v \leftarrow 2$;
+    $(\vec{\phi},\vec{\theta},\mu) \leftarrow
+    (\vec{\phi}_0,\vec{\theta}_0,\mu_0)$\;
+    Calculate $Z(\vec{\phi},\vec{\theta},\mu)$ with
+    Eq. (9).  \textit{\footnotesize \# Vector of errors}\;
+    $A \leftarrow J^T J$   \textit{\footnotesize \# The Gauss-Newton Hessian
+    approximation}\;
+    $u \leftarrow \tau * \max_i(A_{ii})$ \textit{\footnotesize \# Weight of the
+    gradient-descent step}\;
+    $g \leftarrow J^T Z(\vec{\phi},\vec{\theta},\mu)$ \textit{\footnotesize \#
+    The gradient descent step}\;
+	$ \text{stop} \leftarrow (\|g\|_{\infty} \le \epsilon_1)$
+    \textit{\footnotesize \# Termination Variable}\;
+	\While{not stop and $k < k_{\max}$}{
+		$k \leftarrow k + 1$\;
+		\Repeat{stop or $\rho > 0$}{
+			$\delta \leftarrow {(A + u \times \text{diag}(A))}^{-1} g$
+            \textit{\footnotesize \# Calculate step direction}\;
+            \eIf(\textit{\footnotesize \# Change  is too small
+              to
+              continue.})
+            {$\| \delta \| \le \epsilon_2 \|
+              (\vec{\phi},\vec{\theta},\mu) \|$} {
+				$\text{stop} \leftarrow \text{true}$\;
+			}{
+				$(\vec{\phi}_{new},\vec{\theta}_{new},\mu_{new})
+                \leftarrow (\vec{\phi},\vec{\theta},\mu) + \delta$
+                \textit{\footnotesize \# A trial step}\;
+				$\rho \leftarrow (\|
+                Z(\vec{\phi},\vec{\theta},\mu)\|^2 - \|
+                Z(\vec{\phi}_{new},\vec{\theta}_{new},\mu_{new})\|^2
+                )/(\delta^T(u \delta + g))$ \;
+                \eIf(\textit{\footnotesize \# Trial step was good}){$\rho >
+                    0$}{
+					$(\vec{\phi},\vec{\theta},\mu) \leftarrow
+                    (\vec{\phi}_{new},\vec{\theta}_{new},\mu_{new})$
+                    \textit{\footnotesize \# Update variables}\;
+                    Calculate $Z(\vec{\phi},\vec{\theta},\mu)$ with
+                    Eq. (9); $A \leftarrow J^T J$; $g \leftarrow J^T
+                    Z(\vec{\phi},\vec{\theta},\mu)$\;
+					$ \text{stop} \leftarrow (\|g\|_{\infty} \le
+                    \epsilon_1)$ or $(\|
+                    Z{(\vec{\phi},\vec{\theta},\mu)}^2 \| \le
+                    \epsilon_3)$ \;
+                    $v \leftarrow 2$;
+					$u \rightarrow u * \max(1/3, 1 - {(2\rho - 1)}^3 )$\;
+                } (\textit{\footnotesize \# Trial step was bad}){
+                    $v \leftarrow 2 v$;
+					$u \leftarrow u v$\;
+				}
+			}
+		 }
+	}
+	$(\vec{\phi}^*,\vec{\theta}^*,\mu^*) \leftarrow (\vec{\phi},\vec{\theta},\mu)$\;
+
 \label{alg:LM}
 \end{algorithm}
 
 Suggested values for the tuning parameters are $\epsilon_1 = \epsilon_2 =
-\epsilon_3 = 10^{-15}, \tau = 10^{-3}$ and $k_{max} = 100$.
+\epsilon_3 = 10^{-15}, \tau = 10^{-3}$ and $k_{\max} = 100$.
 
-The Jacobian matrix $J = (J_{1}, J_{2}, \dots, J_N)^T$ requires the partial derivatives, which are
-\begin{align}
-J_t = (J_{t, \phi_1}, \dots, J_{t,\phi_p}, J_{t,\theta_1}, \dots,
-J_{t,\theta_q}, J_{t,\mu})^T\ .
-\end{align}
+The Jacobian matrix $J = {(J_{1}, J_{2}, \ldots, J_N)}^T$ requires the partial derivatives, which are
+\begin{equation}
+J_t = {(J_{t, \phi_1}, \ldots, J_{t,\phi_p}, J_{t,\theta_1}, \ldots,
+  J_{t,\theta_q}, J_{t,\mu})}^T
+\end{equation}
 Here the last term is present only when \texttt{include\_mean} is
 \texttt{True}.
 The iteration relations for $J$ are
-\begin{align}
-J_{t, \phi_i} &= \frac{\partial F_t(\phi,\theta)}{\partial \phi_i} =
+\begin{eqnarray}
+J_{t, \phi_i} &=& \frac{\partial F_t(\phi,\theta)}{\partial \phi_i} =
 -\frac{\partial Z_t}{\partial \phi_i} = X_{t-i}-\mu + \sum_{j=1}^q
 \theta_j \frac{\partial Z_{t - j}}{\partial \phi_i} = X_{t-i}-\mu - \sum_{j=1}^q
-\theta_j J_{t-j,\phi_i}, \\
-J_{t, \theta_i}&=\frac{\partial F_t(\phi,\theta)}{\partial \theta_i} =
+\theta_j J_{t-j,\phi_i}, \label{eq:J1}\\
+J_{t, \theta_i}&=&\frac{\partial F_t(\phi,\theta)}{\partial \theta_i} =
 -\frac{\partial Z_t}{\partial \theta_i} = Z_{t-i} + \sum_{j =1}^q
 \theta_j \frac{\partial Z_{t - j}}{\partial \theta_i} = Z_{t-i} -
-\sum_{j=1}^q \theta_j J_{t-j,\theta_i}, \\
-J_{t, \mu} &=\frac{\partial F_t(\phi,\theta)}{\partial \mu} =
+\sum_{j=1}^q \theta_j J_{t-j,\theta_i}, \label{eq:J2}\\
+J_{t, \mu} &=&\frac{\partial F_t(\phi,\theta)}{\partial \mu} =
 -\frac{\partial Z_t}{\partial \mu} = 1 -
 \sum_{j=1}^p \phi_j - \sum_{j=1}^q \theta_j \frac{\partial
   Z_{t-j}}{\partial \mu} = 1 - \sum_{j=1}^p \phi_j - \sum_{j=1}^q
-\theta_j J_{t-j,\mu}.
-\end{align}
+\theta_j J_{t-j,\mu}. \label{eq:J3}
+\end{eqnarray}
 Note that the mean value $\mu$ is considered separately in the above
 formulations. When \texttt{include\_mean} is set to \texttt{False}, $\mu$ will be simply
 set to 0. Otherwise, $\mu$ will also be estimated together with
@@ -311,7 +303,7 @@ $\vec{\phi}$ and $\vec{\theta}$. The initial conditions for the above
 equations are
 \begin{equation}
 J_{t,\phi_i} = J_{t,\theta_j} = J_{t,\mu} = 0 \quad \mbox{for }
-t \leq p, \mbox{ and } i=1,\dots,p; j = 1, \dots, q\ ,
+t \leq p,\ \mbox{and }i=1,\dots,p; j = 1, \dots, q\ ,
 \end{equation}
 because we have fixed $Z_t$ for $t\leq p$ to be a constant $0$ in the initial
 condition. Note that $J$ is zero not only for $t\leq
@@ -319,7 +311,9 @@ condition. Note that $J$ is zero not only for $t\leq
 
 \subsection{The Problems in Parallelization}
 
-% What are the difficulties that we are facing
+Eqs. (\ref{eq:error-terms},~\ref{eq:J1},~\ref{eq:J2},~\ref{eq:J3}) are
+difficult to parallelize.
+
 
 \subsection{Our Solution}
 
