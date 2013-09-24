@@ -92,6 +92,17 @@ Here in this paper, we focus our implementation for ARIMA in MADlib.
 
 % A short summary for the next few subsections
 
+In the next few subsections, we will first describe the algorithm that we have
+used to solve the problem of maximization of partial log-likelihood. Then, we
+point out the reason why it is difficult to make the algorithm run parallel.
+The difficulty is not restricted to this specific algorithm. It is a
+common situation in all algorithms that fit ARIMA models. Actually it is easy
+to see that many machine learning models have similar problems. Next, we
+describe our solution to this problem. Our method is quite general and can
+parallelize similar problems. Then we describe a simple method to improve the
+performance of our algorithm. In the end, we discuss the possible ways to
+generalize our methods to more algorithms.
+
 \subsection{The Algorithm}
 
 % List the LM algorithm
@@ -160,7 +171,7 @@ l(\phi, \theta) &=& \sum_{t = 1}^N \ln \left(\frac{1}{\sqrt{2 \pi \sigma^2}}
  &=&  \sum_{t = 1}^N  - \ln \left( \sqrt{2 \pi \sigma^2}\right)
 -\frac{Z^2_t}{2 \sigma^2}\nonumber\\
 &=&  -\frac{N}{2} \ln \left( 2 \pi \sigma^2\right)  - \frac{1}{2
-  \sigma^2} \sum_{t = 1}^N   Z^2_t\ . \label{eq:loglikelihood}
+  \sigma^2} \sum_{t = 1}^N   Z^2_t\ \. \label{eq:loglikelihood}
 \end{eqnarray}
 Thus, finding the maximum likelihood is equivalent to solving the
 optimization problem (known as the conditional least squares
@@ -311,9 +322,11 @@ condition. Note that $J$ is zero not only for $t\leq
 
 \subsection{The Problems in Parallelization}
 
-Eqs. (\ref{eq:error-terms},~\ref{eq:J1},~\ref{eq:J2},~\ref{eq:J3}) are
-difficult to parallelize.
-
+It is very easy to see that Eqs.
+(\ref{eq:error-terms},~\ref{eq:J1},~\ref{eq:J2},~\ref{eq:J3}) are
+difficult to parallelize. Each step computation uses the result from the
+previous step. Therefore, we have to scan through the data sequentially to
+compute the quatities in these equations.
 
 \subsection{Our Solution}
 
