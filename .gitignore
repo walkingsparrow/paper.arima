@@ -1,4 +1,6 @@
 auto/
+*.fls
+*.fdb_latexmk
 *.project.vim
 *.swp
 *._aux

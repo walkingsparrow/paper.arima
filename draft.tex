@@ -40,13 +40,20 @@
 
 \section{Introduction}
 
-% Introduce to MADlib, and implement ARIMA in MADLib
-MADlib~\cite{madlib} is an open source library for scalable in-database
-analytics.  It is created by the Predictive Analytics Team at Pivotal Inc.
-MADlib provides data-parallel implementations of mathematical, statistical and
-machine-learning methods for structured and unstructured data.
+% Introduce to MADlib, and implement ARIMA in MADlib
+MADlib~\cite{madlib} is an open source library for scalable in-database analytics, currently backed by the Predictive Analytics Team at Pivotal Inc.
+It provides data-parallel implementations of mathematical, statistical and machine-learning methods for structured and unstructured data.
 
-\section{What is MADlib?}
+Time series analyses are important in econometrics, mathematical finance, weather forecasting, earthquake prediction and many other fields.
+For example, one of the most conspicuous data analytics task -- stock price forecasting -- falls into the category of time series analysis.
+
+However, different from other common data analytics tasks, time series data have a natural temporal ordering.
+And many time series modeling methods, such as ARIMA~\cite{arima} and Cox proportional hazards~\cite{cox} therefore depend on sequential processing of time series data, which raises a challenge for the data-parallel implementation in MADlib.
+
+In MADlib, we attack this challenge using an idea illustrated below [TODO: add a simple figure to compare MADlib ARIMA and order aggregate with iterations].
+
+
+\subsection{What is MADlib?}
 
 % More details on MADlib
 
@@ -171,7 +178,7 @@ l(\phi, \theta) &=& \sum_{t = 1}^N \ln \left(\frac{1}{\sqrt{2 \pi \sigma^2}}
  &=&  \sum_{t = 1}^N  - \ln \left( \sqrt{2 \pi \sigma^2}\right)
 -\frac{Z^2_t}{2 \sigma^2}\nonumber\\
 &=&  -\frac{N}{2} \ln \left( 2 \pi \sigma^2\right)  - \frac{1}{2
-  \sigma^2} \sum_{t = 1}^N   Z^2_t\ \. \label{eq:loglikelihood}
+  \sigma^2} \sum_{t = 1}^N   Z^2_t\ . \label{eq:loglikelihood}
 \end{eqnarray}
 Thus, finding the maximum likelihood is equivalent to solving the
 optimization problem (known as the conditional least squares
