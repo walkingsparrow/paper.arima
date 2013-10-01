@@ -1,4 +1,8 @@
-Players: MADlib, R, and one more (Alpine, Oracle Data Mining trial version, GraphLab ...)
+Players:
+  MADlib (DCA standard GPDB installation)
+  MADlib (DCA Postgres installation)
+  R
+  one more (Alpine, Oracle Data Mining trial version, GraphLab ...)
 
 1. High-level Performance Comparison
 Assumption to be validated:
@@ -30,9 +34,9 @@ Assumption to be validated:
   the ARIMA implementation in MADlib make good use of the MPP system to gain performance
 Players:
   MADlib ARIMA
-  old MADlib ARIMA using ordered aggregate 
+  old MADlib ARIMA using ordered aggregate (from github archive)
 Datasets:
-  a small real dataset or the generated huge dataset
+  the generated huge dataset
 Chart:
   x - number of segments; y - training and forcast (?) time
 Expected outcome:
