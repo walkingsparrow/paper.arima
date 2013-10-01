@@ -1,0 +1,40 @@
+Players: MADlib, R, and one more (Alpine, Oracle Data Mining trial version, GraphLab ...)
+
+1. High-level Performance Comparison
+Assumption to be validated:
+  the ARIMA implementation in MADlib is relatively good, compared to other players
+Datasets:
+  dataset x 3
+    beer (in TINC)
+    many from http://www.cs.ucr.edu/~eamonn/time_series_data/
+    2 from http://www.r-project.org/doc/Rnews/Rnews_2002-2.pdf
+    http://www.kaggle.com/c/dsg-hackathon/data
+    ...
+Chart:
+  a table showing runtimes of training and forecasting, for each player
+Expected outcome:
+  MADlib has shorter runtimes on most of tasks
+  
+2. Drill-down experiment 1: Scalability
+Assumption to be validated:
+  the ARIMA implementation in MADlib scales near linearly while other players fail or too slow on large datasets
+Datasets:
+  generated synthetic datasets with different sizes ...
+Chart:
+  x - size of dataset; y - training time
+Expected outcome:
+  MADlib scales near linearly, R fails on some large datasets
+
+3. Drill-down experiment 2: Parallelization
+Assumption to be validated:
+  the ARIMA implementation in MADlib make good use of the MPP system to gain performance
+Players:
+  MADlib ARIMA
+  old MADlib ARIMA using ordered aggregate 
+Datasets:
+  a small real dataset or the generated huge dataset
+Chart:
+  x - number of segments; y - training and forcast (?) time
+Expected outcome:
+  ordered aggregate is mostly a flat line (same runtimes for different #segments), while MADlib ARIMA is faster with more segments
+
