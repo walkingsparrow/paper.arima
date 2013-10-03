@@ -1,0 +1,24 @@
+*** Data 1: tseries10e8 ***
+
+-- R --
+
+> ts <- arima.sim(list(order = c(2,0,1), ar = c(0.7, -0.3), ma=0.2), n = 100000000) + 3.2
+> save(ts, file="time_series_10e8.rda")
+> system.time(arima(ts, order = c(2,0,1), include.mean = TRUE, method
+            > = "CSS"))
+    user   system  elapsed
+1735.693  228.406 1964.433
+
+-- Database arima (GPDB) ---------------------------
+
+Table tseries10e8 (distributed randomly)
+Table tseries10e8_distributed_tid (distributed by tid)
+
+chunk_size=10000  527.56 sec
+chunk_size=100000 364.61 sec
+
+-- Database madlib-pg92 (Postgres) ------------------
+
+chunk_size=10000    1809.55 sec
+chunk_size=100000   1391.9 sec
+
