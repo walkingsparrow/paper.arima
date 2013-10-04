@@ -41,16 +41,28 @@
 \section{Introduction}
 
 % Introduce to MADlib, and implement ARIMA in MADlib
-MADlib~\cite{madlib} is an open source library for scalable in-database analytics, currently backed by the Predictive Analytics Team at Pivotal Inc.
-It provides data-parallel implementations of mathematical, statistical and machine-learning methods for structured and unstructured data.
+MADlib~\cite{madlib} is an open source library for scalable
+in-database analytics, currently backed by the Predictive Analytics
+Team at Pivotal Inc. It provides data-parallel implementations of
+mathematical, statistical and machine-learning methods for structured
+and unstructured data.
 
-Time series analyses are important in econometrics, mathematical finance, weather forecasting, earthquake prediction and many other fields.
-For example, one of the most conspicuous data analytics task -- stock price forecasting -- falls into the category of time series analysis.
+Time series analyses are important in econometrics, mathematical
+finance, weather forecasting, earthquake prediction and many other
+fields. For example, one of the most conspicuous data analytics task
+-- stock price forecasting -- falls into the category of time series
+analysis.
 
-However, different from other common data analytics tasks, time series data have a natural temporal ordering.
-And many time series modeling methods, such as ARIMA~\cite{arima} and Cox proportional hazards~\cite{cox} therefore depend on sequential processing of time series data, which raises a challenge for the data-parallel implementation in MADlib.
+However, different from other common data analytics tasks, time series
+data have a natural temporal ordering. And many time series modeling
+methods, such as ARIMA~\cite{arima} and Cox proportional
+hazards~\cite{cox} therefore depend on sequential processing of time
+series data, which raises a challenge for the data-parallel
+implementation in MADlib.
 
-In MADlib, we attack this challenge using an idea illustrated below [TODO: add a simple figure to compare MADlib ARIMA and order aggregate with iterations].
+In MADlib, we attack this challenge using an idea illustrated below
+[TODO: add a simple figure to compare MADlib ARIMA and order aggregate
+with iterations].
 
 
 \subsection{What is MADlib?}
@@ -66,10 +78,11 @@ Cohen et al.~\cite{mad-skills} explained that ``MAD'' stands for ``magnetic'',
 machine learning), parallel and scalable in-database functions.
 
 The MADlib project was initiated in late 2010. Currently MADlib's latest
-version is 1.2. By itself MADlib provides a pure SQL interface. An R front-end
-named PivotalR~\cite{pivotalr} is also created by the Predictive Analytics Team
-at Pivotal Inc. A Python wrapper~\cite{python-madlib} for MADlib is also
-available.
+version is 1.3. By itself MADlib provides a pure SQL interface. An R
+front-end named PivotalR~\cite{pivotalr} is also created by the
+Predictive Analytics Team at Pivotal Inc.
+
+%A Python wrapper~\cite{python-madlib} for MADlib is also available.
 
 MADlib can be installed and run on both Grenplum database and PostgreSQL\@. On
 Greenplum database (GPDB) systems, MADlib utilizes the data parallel
@@ -80,18 +93,23 @@ implement the part inside each iteration, which is computation intensive. We
 use Python code to drive the iterations, which does not have high requirements
 for the performance.
 
+Although MADlib does not do parallel computation on PostgreSQL, it is
+still valuable for process big data sets that cannot be loaded into
+memory. For example, in this paper we describe our implementation of
+ARIMA in MADlib. We compare our implementation 
+
 % explain more about the C++ abstraction layer
 
 % more about Python layer
 
-At the time of writing, MADlib has modules for linear regression, logistic
-regression, multinomial logistic regression, elastic-net regularization for
-linear and logistic regressions, all kinds of robust estimators for
-regressions, marginal effects, k-means, association rules, cross validation,
-linear systems, matrix factorization, LDA, data summary, correlation,
-hypothesis tests, SVD and PCA, ARIMA etc and many other supporting functions.
-A very detailed user documentation is available onlin at
-http://madlib.net.
+At the time of writing, MADlib has modules for linear regression,
+logistic regression, multinomial logistic regression, elastic-net
+regularization for linear and logistic regressions, all kinds of
+robust estimators for regressions, marginal effects, k-means,
+association rules, cross validation, linear systems, matrix
+factorization, LDA, data summary, correlation, hypothesis tests, SVD
+and PCA, ARIMA etc and many other supporting functions.  A very
+detailed user documentation is available onlin at http://madlib.net.
 
 Here in this paper, we focus our implementation for ARIMA in MADlib.
 
@@ -178,7 +196,7 @@ l(\phi, \theta) &=& \sum_{t = 1}^N \ln \left(\frac{1}{\sqrt{2 \pi \sigma^2}}
  &=&  \sum_{t = 1}^N  - \ln \left( \sqrt{2 \pi \sigma^2}\right)
 -\frac{Z^2_t}{2 \sigma^2}\nonumber\\
 &=&  -\frac{N}{2} \ln \left( 2 \pi \sigma^2\right)  - \frac{1}{2
-  \sigma^2} \sum_{t = 1}^N   Z^2_t\ . \label{eq:loglikelihood}
+  \sigma^2} \sum_{t = 1}^N   Z^2_t\ \. \label{eq:loglikelihood}
 \end{eqnarray}
 Thus, finding the maximum likelihood is equivalent to solving the
 optimization problem (known as the conditional least squares
@@ -246,7 +264,7 @@ A proposed implementation is as follows:
 	\While{not stop and $k < k_{\max}$}{
 		$k \leftarrow k + 1$\;
 		\Repeat{stop or $\rho > 0$}{
-			$\delta \leftarrow {(A + u \times \text{diag}(A))}^{-1} g$
+            $\delta \leftarrow{(A + u \times \text{diag}(A))}^{-1} g$
             \textit{\footnotesize \# Calculate step direction}\;
             \eIf(\textit{\footnotesize \# Change  is too small
               to
