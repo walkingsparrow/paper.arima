@@ -256,63 +256,45 @@ be a Jacobian matrix.
 A proposed implementation is as follows:
 
 \begin{algorithm}[ht]
-\KwIn{An initial guess for parameters $\vec{\phi}_0, \vec{\theta}_0, \mu_0$}
-\KwOut{The parameters that maximize the likelihood $\vec{\phi}^*,
-  \vec{\theta}^*, \mu^*$}
-    $k \leftarrow 0$; $v \leftarrow 2$;
-    $(\vec{\phi},\vec{\theta},\mu) \leftarrow
-    (\vec{\phi}_0,\vec{\theta}_0,\mu_0)$\;
-    Calculate $Z(\vec{\phi},\vec{\theta},\mu)$ with
-    Eq. (9).  \textit{\footnotesize \# Vector of errors}\;
-    $A \leftarrow J^T J$   \textit{\footnotesize \# The Gauss-Newton Hessian
-    approximation}\;
-    $u \leftarrow \tau * \max_i(A_{ii})$ \textit{\footnotesize \# Weight of the
-    gradient-descent step}\;
-    $g \leftarrow J^T Z(\vec{\phi},\vec{\theta},\mu)$ \textit{\footnotesize \#
-    The gradient descent step}\;
-	$ \text{stop} \leftarrow (\|g\|_{\infty} \le \epsilon_1)$
-    \textit{\footnotesize \# Termination Variable}\;
-	\While{not stop and $k < k_{\max}$}{
-		$k \leftarrow k + 1$\;
-		\Repeat{stop or $\rho > 0$}{
-            $\delta \leftarrow{(A + u \times \text{diag}(A))}^{-1} g$
-            \textit{\footnotesize \# Calculate step direction}\;
-            \eIf(\textit{\footnotesize \# Change  is too small
-              to
-              continue.})
-            {$\| \delta \| \le \epsilon_2 \|
-              (\vec{\phi},\vec{\theta},\mu) \|$} {
-				$\text{stop} \leftarrow \text{true}$\;
-			}{
-				$(\vec{\phi}_{new},\vec{\theta}_{new},\mu_{new})
-                \leftarrow (\vec{\phi},\vec{\theta},\mu) + \delta$
-                \textit{\footnotesize \# A trial step}\;
-				$\rho \leftarrow (\|
-                Z(\vec{\phi},\vec{\theta},\mu)\|^2 - \|
-                Z(\vec{\phi}_{new},\vec{\theta}_{new},\mu_{new})\|^2
-                )/(\delta^T(u \delta + g))$ \;
-                \eIf(\textit{\footnotesize \# Trial step was good}){$\rho >
-                    0$}{
-					$(\vec{\phi},\vec{\theta},\mu) \leftarrow
-                    (\vec{\phi}_{new},\vec{\theta}_{new},\mu_{new})$
-                    \textit{\footnotesize \# Update variables}\;
-                    Calculate $Z(\vec{\phi},\vec{\theta},\mu)$ with
-                    Eq. (9); $A \leftarrow J^T J$; $g \leftarrow J^T
-                    Z(\vec{\phi},\vec{\theta},\mu)$\;
-					$ \text{stop} \leftarrow (\|g\|_{\infty} \le
-                    \epsilon_1)$ or $(\|
-                    Z{(\vec{\phi},\vec{\theta},\mu)}^2 \| \le
-                    \epsilon_3)$ \;
-                    $v \leftarrow 2$;
-					$u \rightarrow u * \max(1/3, 1 - {(2\rho - 1)}^3 )$\;
-                } (\textit{\footnotesize \# Trial step was bad}){
-                    $v \leftarrow 2 v$;
-					$u \leftarrow u v$\;
-				}
-			}
-		 }
-	}
-	$(\vec{\phi}^*,\vec{\theta}^*,\mu^*) \leftarrow (\vec{\phi},\vec{\theta},\mu)$\;
+  \KwIn{An initial guess for parameters $\vec{\phi}_0, \vec{\theta}_0,
+    \mu_0$} \KwOut{The parameters that maximize the likelihood
+    $\vec{\phi}^*, \vec{\theta}^*, \mu^*$} $k \leftarrow 0$; $v
+  \leftarrow 2$; $(\vec{\phi},\vec{\theta},\mu) \leftarrow
+  (\vec{\phi}_0,\vec{\theta}_0,\mu_0)$\; Calculate
+  $Z(\vec{\phi},\vec{\theta},\mu)$ with Eq. (9).
+  \textit{\footnotesize // Vector of errors}\; $A \leftarrow J^T J$
+  \textit{\footnotesize // The Gauss-Newton Hessian approximation}\;
+  $u\leftarrow \tau * \max_i(A_{ii})$ \textit{\footnotesize // Weight
+    of the gradient-descent step}\; $g \leftarrow J^T
+  Z(\vec{\phi},\vec{\theta},\mu)$ \textit{\footnotesize // The
+    gradient descent step}\; $ \text{stop} \leftarrow (\|g\|_{\infty}
+  \le \epsilon_1)$ \textit{\footnotesize // Termination Variable}\;
+  \While{not stop and $k < k_{\max}$}{ $k \leftarrow k + 1$\;
+    \Repeat{stop or $\rho > 0$}{ $\delta \leftarrow{(A + u \times
+        \text{diag}(A))}^{-1} g$ \textit{\footnotesize // Calculate
+        step direction}\; \eIf(\textit{\footnotesize // Change is too
+        small to continue.})  {$\| \delta \| \le \epsilon_2 \|
+        (\vec{\phi},\vec{\theta},\mu) \|$} { $\text{stop} \leftarrow
+        \text{true}$\; }{
+        $(\vec{\phi}_{new},\vec{\theta}_{new},\mu_{new}) \leftarrow
+        (\vec{\phi},\vec{\theta},\mu) + \delta$ \textit{\footnotesize
+          // A trial step}\; $\rho \leftarrow (\|
+        Z(\vec{\phi},\vec{\theta},\mu)\|^2 - \|
+        Z(\vec{\phi}_{new},\vec{\theta}_{new},\mu_{new})\|^2
+        )/(\delta^T(u \delta + g))$ \; \eIf(\textit{\footnotesize //
+          Trial step was good}){$\rho > 0$}{
+          $(\vec{\phi},\vec{\theta},\mu) \leftarrow
+          (\vec{\phi}_{new},\vec{\theta}_{new},\mu_{new})$
+          \textit{\footnotesize // Update variables}\; Calculate
+          $Z(\vec{\phi},\vec{\theta},\mu)$ with Eq. (9); $A \leftarrow
+          J^T J$; $g \leftarrow J^T Z(\vec{\phi},\vec{\theta},\mu)$\;
+          $ \text{stop} \leftarrow (\|g\|_{\infty} \le \epsilon_1)$ or
+          $(\| Z{(\vec{\phi},\vec{\theta},\mu)}^2 \| \le \epsilon_3)$
+          \; $v \leftarrow 2$; $u \rightarrow u * \max(1/3, 1 -
+          {(2\rho - 1)}^3 )$\; } (\textit{\footnotesize // Trial step
+          was bad}){ $v \leftarrow 2 v$; $u \leftarrow u v$\; } } } }
+  $(\vec{\phi}^*,\vec{\theta}^*,\mu^*) \leftarrow
+  (\vec{\phi},\vec{\theta},\mu)$\;
 
 \label{alg:LM}
 \end{algorithm}
