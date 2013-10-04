@@ -339,6 +339,20 @@ compute the quatities in these equations.
 
 % Our solution and how to improve the performance
 
+In order to utilize the data-parallel capability of MPP database, we propose to segment the whole time series data into a set of consecutive time series data, numbering from $1$ to $N$, each subset comprising a sequence of consecutive time series data of size $K$. Since the model fitting involves multile iterations of computations, for any subset $i$ execpt for the first one, we use the results of the previous subset $i-1$ from the previous iteration as the initial values. Thus in each iteration, the computation for each subset of data does not need to wait for the results from the previous subset. In this way, the model fitting computaion can be parallelized. Besides, we find that aggregating each subset of consecutive time series data into an array (i.e. a data chunk) can greatly simpliy the implementation (for example, from a stateful window function implementation to a plain UDF implementation) and accelerate the computation (mainly due to the reduction of I/O overhead and function call overhead). Furthermore, we can specify the value of size $K$  according to the system configuration so that each chunk of data can be completely loaded into the avaialble memory).
+
+The following SQL shows how we segment and redistribute the data according to the above proposals. 
+
+\begin{verbatim}
+create temp table dist_table as
+  select
+    ((tid - 1) / chunk_size)::integer + 1 as distid, 
+    tid, tval
+  from 
+      input_table
+distributed by (distid)
+\end{verbatim}
+
 \subsection{Performance}
 
 % Good performance improvement, some examples
