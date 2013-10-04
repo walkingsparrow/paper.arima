@@ -437,10 +437,19 @@ not very big.
   \begin{centering}
     \includegraphics[angle=-90,scale=0.4]{pg_time_vs_size}
   \end{centering}
-  \caption{\label{fig:gp_time_size} We fit a time series with length
-    of $10^8$ using different chunk sizes. The execution times are
-    around $400$ $\sim$ $500$ secs, and are quite stable. }
+  \caption{\label{fig:pg_time_size} We fit a time series with length of
+    $10^8$ using different chunk sizes. The execution times are around
+    $400$ $\sim$ $500$ secs, and are quite stable. }
 \end{figure}
+
+\begin{table}[ht]
+  \begin{tabular}{|l|l|l|l|}
+    \hline
+    ~ & MADlib on GPDB & MADlib on Postgres & R's arima function \\ \hline
+    Execution Time (sec) & 364.4 & 1391.9 & 1964.4 \\ \hline
+  \end{tabular}
+  \caption{\label{tbl:compare_R} Here we compare the execution times of ARIMA model fitting in R and in MADlib on Greenplum Database and PostgreSQL database. }
+\end{table}
 
 \subsection{Performance}
 
