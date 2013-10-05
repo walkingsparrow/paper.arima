@@ -23,8 +23,7 @@
 
 \begin{document}
 
-\title{Implementation of Parallel Algorithms for ARIMA in Distributed
-  Database Systems}
+\title{{Parallel Implementation of Time Series Analysis in Distributed Database Systems}}
 
 % \author{}
 
@@ -47,26 +46,27 @@
     original data so that each chunk can be completely loaded into memory.
 \end{abstract}
 
-{\bf keywords}: distributive, parallel computation, database, machine
-learning, big data, ARIMA
+{\bf keywords}: parallel computation, time series, database management system, machine learning, big data, ARIMA
 
 %\maketitle
 
+
 \section{Introduction}
 
-% Introduce to MADlib, and implement ARIMA in MADlib
+% Introduce to MADlib
 MADlib~\cite{madlib} is an open source library for scalable
 in-database analytics, currently backed by the Predictive Analytics
 Team at Pivotal Inc. It provides data-parallel implementations of
 mathematical, statistical and machine-learning methods for structured
 and unstructured data.
 
+% time series analysis is important
 Time series analyses are important in econometrics, mathematical
 finance, weather forecasting, earthquake prediction and many other
 fields. For example, one of the most conspicuous data analytics task,
 stock price forecasting, falls into the category of time series
 analysis.
-
+% time series analysis is hard to parallelize
 However, different from other common data analytics tasks, time series
 data have a natural temporal ordering. And many time series modeling
 methods, such as ARIMA~\cite{arima} and Cox proportional
@@ -74,9 +74,17 @@ hazards~\cite{cox}, therefore depend on sequential processing of time
 series data, which raises a challenge for the data-parallel
 implementation in MADlib.
 
-In MADlib, we attack this challenge using an idea illustrated below
-[TODO add a simple figure to compare MADlib ARIMA and order aggregate
-with iterations].
+% we focus on ARIMA in this paper
+In this paper, we present our parallel implementation of autoregressive integrated moving average (ARIMA), an popular and important time series analysis model, in MADlib.
+% our idea is chunking
+In MADlib, we attack this mismatch by taking advantage of the iterative nature of the learning algorithms and rely on only local ordering, illustrated in Fig. (\ref{fig:seq_vs_dist}).
+\begin{figure}[ht]
+  \begin{centering}
+    \includegraphics[width=\textwidth]{sequential_vs_distributed.png}
+  \end{centering}
+  \caption{\label{fig:seq_vs_dist} The comparison between sequential
+    and distributed designs. A segment is a running process in parallel databases.}
+\end{figure}
 
 
 \subsection{What is MADlib?}
@@ -378,16 +386,8 @@ be completely loaded into the avaialble
 memory. Fig. (\ref{fig:seq_vs_dist}) shows the different designs of
 using a sequential implementation and a parallel implementation. 
 
-\begin{figure}[ht]
-  \begin{centering}
-    \includegraphics[scale=0.25]{sequential_vs_distributed.png}
-  \end{centering}
-  \caption{\label{fig:seq_vs_dist} The comparison between sequential
-    and distributed designs. }
-\end{figure}
-
 The following SQL shows how we segment and redistribute the data
-according to the above proposals. 
+according to the above proposals.
 
 \begin{verbatim}
 create temp table dist_table as
