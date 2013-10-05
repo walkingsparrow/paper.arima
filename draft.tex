@@ -370,7 +370,7 @@ comprising a sequence of consecutive time series data of size
 $K$. Since the model fitting involves multile iterations of
 computations, for any subset $i$ execpt for the first one, we use the
 results of the $(i-1)$-th subset from the previous iteration as the
-initial values. The first subset's initial values are known to Thus in
+initial values. The first subset's initial values are known. Thus in
 each iteration, the computation for each subset of data does not need
 to wait for the results from the previous subset. In this way, the
 model fitting computaion can be parallelized. 
