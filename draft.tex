@@ -166,8 +166,8 @@ ARIMA models involve the following variables:
     \item The error terms $Z_t$.
 \end{enumerate}
 
-The  auto regression operator models the prediction for the next
-observation  as some linear combination of the previous observations.
+The auto regression operator models the prediction for the next
+observation as some linear combination of the previous observations.
 More formally, an AR operator of order $p$ is defined as
 \begin{equation}
 \phi(B) Y_t= \phi_1 Y_{t-1}   + \cdots +  \phi_{p} Y_{t-p}
@@ -250,10 +250,10 @@ true solution, the Gauss-Newton step dominates.
 Like other numeric minimization algorithms, LMA is an iterative
 procedure.  To start a minimization, the user has to provide an
 initial guess for the parameter vector, $p$, as well as some tuning
-parameters $\tau$, $\epsilon_1$, $\epsilon_2$, $\epsilon_3$, and $k_{\max}$.
-Let $Z(p)$ be the vector of calculated errors ($Z_t$'s) for the
-parameter vector $p$, and let $J = {(J_{1}, J_{2}, \ldots, J_N)}^T$
-be a Jacobian matrix.
+parameters $\tau$, $\epsilon_1$, $\epsilon_2$, $\epsilon_3$, and
+$k_{\max}$.  Let $Z(p)$ be the vector of calculated errors ($Z_t$'s)
+for the parameter vector $p$, and let $J = {(J_{1}, J_{2}, \ldots,
+  J_N)}^T$ be a Jacobian matrix.
 
 A proposed implementation is as follows:
 
@@ -304,7 +304,8 @@ A proposed implementation is as follows:
 Suggested values for the tuning parameters are $\epsilon_1 = \epsilon_2 =
 \epsilon_3 = 10^{-15}, \tau = 10^{-3}$ and $k_{\max} = 100$.
 
-The Jacobian matrix $J = {(J_{1}, J_{2}, \ldots, J_N)}^T$ requires the partial derivatives, which are
+The Jacobian matrix $J = {(J_{1}, J_{2}, \ldots, J_N)}^T$ requires the
+partial derivatives, which are
 \begin{equation}
 J_t = {(J_{t, \phi_1}, \ldots, J_{t,\phi_p}, J_{t,\theta_1}, \ldots,
   J_{t,\theta_q}, J_{t,\mu})}^T
@@ -313,32 +314,32 @@ Here the last term is present only when \texttt{include\_mean} is
 \texttt{True}.
 The iteration relations for $J$ are
 \begin{eqnarray}
-J_{t, \phi_i} &=& \frac{\partial F_t(\phi,\theta)}{\partial \phi_i} =
--\frac{\partial Z_t}{\partial \phi_i} = X_{t-i}-\mu + \sum_{j=1}^q
-\theta_j \frac{\partial Z_{t - j}}{\partial \phi_i} = X_{t-i}-\mu - \sum_{j=1}^q
-\theta_j J_{t-j,\phi_i}, \label{eq:J1}\\
-J_{t, \theta_i}&=&\frac{\partial F_t(\phi,\theta)}{\partial \theta_i} =
--\frac{\partial Z_t}{\partial \theta_i} = Z_{t-i} + \sum_{j =1}^q
-\theta_j \frac{\partial Z_{t - j}}{\partial \theta_i} = Z_{t-i} -
-\sum_{j=1}^q \theta_j J_{t-j,\theta_i}, \label{eq:J2}\\
-J_{t, \mu} &=&\frac{\partial F_t(\phi,\theta)}{\partial \mu} =
--\frac{\partial Z_t}{\partial \mu} = 1 -
-\sum_{j=1}^p \phi_j - \sum_{j=1}^q \theta_j \frac{\partial
-  Z_{t-j}}{\partial \mu} = 1 - \sum_{j=1}^p \phi_j - \sum_{j=1}^q
-\theta_j J_{t-j,\mu}. \label{eq:J3}
+  J_{t, \phi_i} &=& \frac{\partial F_t(\phi,\theta)}{\partial \phi_i} =
+  -\frac{\partial Z_t}{\partial \phi_i} = X_{t-i}-\mu + \sum_{j=1}^q
+  \theta_j \frac{\partial Z_{t - j}}{\partial \phi_i} = X_{t-i}-\mu - \sum_{j=1}^q
+  \theta_j J_{t-j,\phi_i}, \label{eq:J1}\\
+  J_{t, \theta_i}&=&\frac{\partial F_t(\phi,\theta)}{\partial \theta_i} =
+  -\frac{\partial Z_t}{\partial \theta_i} = Z_{t-i} + \sum_{j =1}^q
+  \theta_j \frac{\partial Z_{t - j}}{\partial \theta_i} = Z_{t-i} -
+  \sum_{j=1}^q \theta_j J_{t-j,\theta_i}, \label{eq:J2}\\
+  J_{t, \mu} &=&\frac{\partial F_t(\phi,\theta)}{\partial \mu} =
+  -\frac{\partial Z_t}{\partial \mu} = 1 -
+  \sum_{j=1}^p \phi_j - \sum_{j=1}^q \theta_j \frac{\partial
+    Z_{t-j}}{\partial \mu} = 1 - \sum_{j=1}^p \phi_j - \sum_{j=1}^q
+  \theta_j J_{t-j,\mu}. \label{eq:J3}
 \end{eqnarray}
 Note that the mean value $\mu$ is considered separately in the above
-formulations. When \texttt{include\_mean} is set to \texttt{False}, $\mu$ will be simply
-set to 0. Otherwise, $\mu$ will also be estimated together with
-$\vec{\phi}$ and $\vec{\theta}$. The initial conditions for the above
-equations are
+formulations. When \texttt{include\_mean} is set to \texttt{False},
+$\mu$ will be simply set to 0. Otherwise, $\mu$ will also be estimated
+together with $\vec{\phi}$ and $\vec{\theta}$. The initial conditions
+for the above equations are
 \begin{equation}
 J_{t,\phi_i} = J_{t,\theta_j} = J_{t,\mu} = 0 \quad \mbox{for }
 t \leq p,\ \mbox{and }i=1,\dots,p; j = 1, \dots, q\ ,
 \end{equation}
-because we have fixed $Z_t$ for $t\leq p$ to be a constant $0$ in the initial
-condition. Note that $J$ is zero not only for $t\leq
-0$ but also for $t\leq p$.
+because we have fixed $Z_t$ for $t\leq p$ to be a constant $0$ in the
+initial condition. Note that $J$ is zero not only for $t\leq 0$ but
+also for $t\leq p$.
 
 \subsection{The Problems in Parallelization}
 
@@ -346,8 +347,9 @@ It is very easy to see that Eqs.
 (\ref{eq:error-terms},~\ref{eq:J1},~\ref{eq:J2},~\ref{eq:J3}) are
 difficult to parallelize. Each step computation uses the result from
 the previous step. Therefore, we have to scan through the data
-sequentially to compute the quatities in these equations. If the data
-set is very large then it 
+sequentially to compute the quatities in these equations, and we have
+to do this in every iteration. If the data set is very large then it
+is time-consuming to use this algorithm. 
 
 \subsection{Our Solution}
 
@@ -384,7 +386,8 @@ using a sequential implementation and a parallel implementation.
     and distributed designs. }
 \end{figure}
 
-The following SQL shows how we segment and redistribute the data according to the above proposals. 
+The following SQL shows how we segment and redistribute the data
+according to the above proposals. 
 
 \begin{verbatim}
 create temp table dist_table as
@@ -414,8 +417,9 @@ not very big.
   \end{centering}
   \caption{\label{fig:gp_time_size} We fit time series with different
     lengths with the chunk size $10^5$ using MADlib's ARIMA function
-    on Greenplum database. The red line is the fit to $t = \alpha l$, where $t$
-    is the execution time and $l$ is the length of the time series.}
+    on Greenplum database. The red line is the fit to $t = \alpha l$,
+    where $t$ is the execution time and $l$ is the length of the time
+    series.}
 \end{figure}
 
 \begin{figure}[ht]
@@ -424,8 +428,8 @@ not very big.
   \end{centering}
   \caption{\label{fig:pg_time_size} We fit time series with different
     lengths with the chunk size $10^5$ using MADlib's ARIMA function
-    on PostgreSQL database. The red line is the fit to $t = \alpha l$, where
-    $t$ is the execution time and $l$ is the length of the time
+    on PostgreSQL database. The red line is the fit to $t = \alpha l$,
+    where $t$ is the execution time and $l$ is the length of the time
     series.}
 \end{figure}
 
@@ -449,11 +453,17 @@ not very big.
     \includegraphics[angle=-90,scale=0.4]{gp_time_vs_seg}
   \end{centering}
   \caption{\label{fig:gp_time_seg} We fit a time series with length of
-    $10^8$ using different numbers of segments in Greenplum
-    database system.}
+    $10^8$ using different numbers of segments in Greenplum database
+    system.}
 \end{figure}
 
 \subsection{Performance}
+
+% We may not be able to use Alpine's name here
+
+Some comments about Alpine: Alpine is consistently two to threetimes
+faster than MADlib on GPDB.\@ However, Alpine's result is usually very
+bad if not wrong.
 
 % Good performance improvement, some examples
 
