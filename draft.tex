@@ -28,6 +28,8 @@
 
 % \author{}
 
+\institute{Predictive Analytics Team, Pivotal Inc.}
+
 \maketitle
 
 \begin{abstract}
@@ -45,7 +47,7 @@
     original data so that each chunk can be completely loaded into memory.
 \end{abstract}
 
-{\bf keywords}: distributiv, parallel computation, database, machine
+{\bf keywords}: distributive, parallel computation, database, machine
 learning, big data, ARIMA
 
 %\maketitle
@@ -410,18 +412,21 @@ not very big.
   \begin{centering}
     \includegraphics[angle=-90,scale=0.4]{gp_time_vs_size}
   \end{centering}
-  \caption{\label{fig:gp_time_size} We fit a time series with length
-    of $10^8$ using different chunk sizes. The execution times are
-    around $400$ $\sim$ $500$ secs, and are quite stable. }
+  \caption{\label{fig:gp_time_size} We fit time series with different
+    lengths with the chunk size $10^5$ using MADlib's ARIMA function
+    on Greenplum database. The red line is the fit to $t = \alpha l$, where $t$
+    is the execution time and $l$ is the length of the time series.}
 \end{figure}
 
 \begin{figure}[ht]
   \begin{centering}
     \includegraphics[angle=-90,scale=0.4]{pg_time_vs_size}
   \end{centering}
-  \caption{\label{fig:pg_time_size} We fit a time series with length of
-    $10^8$ using different chunk sizes. The execution times are around
-    $400$ $\sim$ $500$ secs, and are quite stable. }
+  \caption{\label{fig:pg_time_size} We fit time series with different
+    lengths with the chunk size $10^5$ using MADlib's ARIMA function
+    on PostgreSQL database. The red line is the fit to $t = \alpha l$, where
+    $t$ is the execution time and $l$ is the length of the time
+    series.}
 \end{figure}
 
 \begin{table}[ht]
@@ -430,8 +435,23 @@ not very big.
     ~ & MADlib on GPDB & MADlib on Postgres & R's arima function \\ \hline
     Execution Time (sec) & 364.4 & 1391.9 & 1964.4 \\ \hline
   \end{tabular}
-  \caption{\label{tbl:compare_R} Here we compare the execution times of ARIMA model fitting in R and in MADlib on Greenplum Database and PostgreSQL database. }
+  \caption{\label{tbl:compare_R} Here we compare the execution times
+    of ARIMA model fitting in R and in MADlib on Greenplum Database 
+    and PostgreSQL database. The time series used to fit the ARIMA 
+    model has a length of $10^8$. Note that running MADlib's ARIMA
+    on Postgres is not only faster but also uses much less memory (0.1\%). 
+    Running this data set in R (50G memory) uses almost 70\% of the
+    machine's memory.}
 \end{table}
+
+\begin{figure}[ht]
+  \begin{centering}
+    \includegraphics[angle=-90,scale=0.4]{gp_time_vs_seg}
+  \end{centering}
+  \caption{\label{fig:gp_time_seg} We fit a time series with length of
+    $10^8$ using different numbers of segments in Greenplum
+    database system.}
+\end{figure}
 
 \subsection{Performance}
 
